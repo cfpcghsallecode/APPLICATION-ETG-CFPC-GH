@@ -147,7 +147,7 @@ body{font-family:var(--f);background:var(--bg);color:#1a1a1a;font-size:14px;min-
 <script>
 const SU='https://hdijwrekfvbsuqmzrgpz.supabase.co',SK='sb_publishable_alCS99Uw2DHX5Edo71ZqAA_WPdsCaS5',CATS=["B", "BE", "C", "CE", "D", "TP CTCR", "TP CTRMP", "TP CTRMTV", "TP CL"];
 let CU=null,CP=null,GD=null,CHT=null;
-window._S={};  // Store global pour éviter les problèmes de serialisation inline
+window._S={};
 
 async function api(p,o){
   const h={'apikey':SK,'Content-Type':'application/json','Prefer':(o&&o.pf)||'return=representation'};
@@ -186,7 +186,6 @@ async function doSignup(){
   const d=await sauth('signup',{email:e,password:p,data:{nom:n,categorie:c}});
   if(d.error){showE(el,tr(d.error_description||d.error));return;}
   
-  // Correction pour la validation par e-mail Supabase
   if(!d.access_token && (d.user || d.id)) {
     showE(el, 'Inscription réussie ! Vérifiez vos e-mails pour confirmer votre compte, puis connectez-vous.');
     setTimeout(() => sw('l'), 4000);
