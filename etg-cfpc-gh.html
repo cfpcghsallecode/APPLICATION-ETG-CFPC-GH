@@ -182,8 +182,17 @@ async function doSignup(){
   const el=document.getElementById('re2');el.classList.add('H');
   if(!n||!e||!p||!c){showE(el,'Remplissez tous les champs');return;}
   if(p.length<6){showE(el,'Mot de passe trop court (6 min)');return;}
+  
   const d=await sauth('signup',{email:e,password:p,data:{nom:n,categorie:c}});
   if(d.error){showE(el,tr(d.error_description||d.error));return;}
+  
+  // Correction pour la validation par e-mail Supabase
+  if(!d.access_token && (d.user || d.id)) {
+    showE(el, 'Inscription réussie ! Vérifiez vos e-mails pour confirmer votre compte, puis connectez-vous.');
+    setTimeout(() => sw('l'), 4000);
+    return;
+  }
+
   CU=d;await loadP();
 }
 async function loadP(){
