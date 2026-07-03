@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/etg-cfpc-gh (1).html" }
+    { "source": "/(.*)", "destination": "/etg-cfpc-gh.html" }
   ]
 }
