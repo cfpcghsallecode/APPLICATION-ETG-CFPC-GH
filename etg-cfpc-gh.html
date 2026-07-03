@@ -186,7 +186,6 @@ async function doSignup(){
   if(d.error){showE(el,tr(d.error_description||d.error));return;}
   CU=d;await loadP();
 }
-
 async function loadP(){
   try{
     const ps=await api('profiles?id=eq.'+CU.user.id+'&select=*');
