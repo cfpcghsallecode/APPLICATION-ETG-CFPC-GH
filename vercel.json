@@ -1,5 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/((?!sw\\.js).*)", "destination": "/etg-cfpc-gh-v3.1.html" }
-  ]
-}
