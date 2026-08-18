@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/((?!sw\\.js|manifest\\.json|icon-192\\.png|icon-512\\.png|apple-touch-icon\\.png).*)", "destination": "/etg-cfpc-gh-v3.1.html" }
+  ]
+}
