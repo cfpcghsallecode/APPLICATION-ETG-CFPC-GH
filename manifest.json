@@ -1,0 +1,12 @@
+{
+  "name": "Suivi ETG — CFPC Georges Hoareau",
+  "short_name": "Suivi ETG",
+  "start_url": "/etg-cfpc-gh-v3.1.html",
+  "display": "standalone",
+  "background_color": "#F7F8FA",
+  "theme_color": "#1B3A6B",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
