@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!sw\\.js|manifest\\.json|favicon\\.ico|favicon\\.svg|icon-192\\.png|icon-512\\.png|icon-512-maskable\\.png|apple-touch-icon\\.png).*)",
+      "destination": "/etg-cfpc-gh-v3.1.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/manifest.json",
+      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+    }
+  ]
+}
