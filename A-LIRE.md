@@ -1,126 +1,140 @@
-# À déposer à la racine de votre dépôt GitHub — version 4.3
+# Version 4.4 — à déposer à la racine du dépôt GitHub
 
 Copyright (c) 2025 Haussmann Begue & Georges Hoareau.
 
-**Supabase : rien à faire dans cette version.** (La table des consignes du
-formateur arrivera avec la 4.4, avec son script SQL.)
+## ⚠️ Cette version demande un passage sur Supabase
 
-Cette version remplace la 4.2 : ne déposez que celle-ci.
+Contrairement aux précédentes. Faites-le **avant** ou **juste après** la mise en
+ligne, dans les deux cas l'application continue de fonctionner :
 
-## Les 11 fichiers
+1. Supabase → **SQL Editor** → **New query**
+2. Collez le contenu de `supabase/migration_03_consignes.sql`
+3. **Run**
+4. Vous devez voir **5 lignes, toutes « OK »**
 
-Déposez-les à la **racine** du dépôt. GitHub remplace ceux qui existent déjà,
-Vercel redéploie tout seul.
+Sans ce script, tout marche sauf les consignes du formateur : l'application le
+dit clairement au lieu de tomber en panne.
 
-## Puis, impérativement
+## Puis, comme d'habitude
 
-Ouvrir le site → F12 → onglet **Application** → **Service Workers** → cocher
-« Update on reload » → recharger. Le cache doit afficher **`etg-cache-v7`**.
+Ouvrir le site → F12 → **Application** → **Service Workers** → « Update on
+reload » → recharger. Le cache doit afficher **`etg-cache-v8`**.
 
-J'ai vérifié en direct sur votre navigateur le 20/08/2026 : vous étiez encore
-en `etg-cache-v5`, c'est-à-dire en version 4.1. Sans cette étape, rien de ce qui
-suit n'arrivera jusqu'à vos stagiaires.
+## Et surtout : la bonne adresse
+
+**`application-etg-cfpc-gh.vercel.app`**
+
+C'est celle-ci qu'il faut mettre en favori et donner aux stagiaires. Les
+adresses du type `...-c0suth0rv-salle-code.vercel.app` sont figées sur un
+déploiement précis et ne se mettront jamais à jour.
 
 ---
 
-## 1. Huit contenus étaient devenus inatteignables — le défaut le plus grave
+## 1. Le menu affichait deux fois « Tableau de bord »
 
-En 4.1 j'ai masqué le bouton hamburger au-delà de 700 px
-(`#drawerBtn{display:none}`) et je l'ai remplacé par le menu latéral. Sauf que
-le tiroir contenait **15 entrées** et que mon menu latéral n'en reprenait
-que 9. Sur ordinateur et sur tablette, ces huit-là n'étaient plus atteignables
-par aucun chemin :
+Défaut introduit le 20/08/2026 : l'entrée était posée à deux endroits, dans le
+fichier de navigation et dans le correctif de l'espace formateur. Mon contrôle
+de doublons ne regardait que les identifiants HTML, or les entrées de menu n'en
+portent pas. **Le contrôle manquant a été ajouté** : le script refuse désormais
+de produire un fichier où deux entrées de menu porteraient le même identifiant.
+Il en compte 22, aucune en double.
 
-Fin de formation ETG · 200 questions · Socles · Thèmes · Fiches orales ·
-Fin de formation Hors circulation · Astuces de conduite ·
-Fin de formation circulation
+## 2. L'espace stagiaire, conforme à la maquette
 
-Sur téléphone elles restaient joignables par l'onglet « Menu » — c'est pour
-cela que le défaut est passé inaperçu chez moi et pas chez vous.
+### Écran « Aujourd'hui » — le nouvel écran d'arrivée
 
-**Corrigé.** Le menu latéral est désormais le miroir exact du tiroir, groupes
-compris (ETG · Hors circulation · Circulation · Réglages), verrous inclus. Le
-routage passe par la même fonction qu'avant (`drawerGo`), donc aucune règle
-d'accès par catégorie n'a été réécrite.
+- **La consigne du formateur en tête.** Elle y reste tant que le stagiaire ne
+  l'a pas marquée comme lue.
+- **Une seule action**, choisie selon une priorité fixe : une série commencée
+  et non terminée → la reprendre ; aucune série aujourd'hui → en faire une ;
+  la série du jour est faite → réviser ses erreurs. Proposer trois choses à
+  faire, c'est demander à quelqu'un qui doute de choisir.
+- **« Ensuite »** : la révision ciblée sur son type d'erreur dominant, ses
+  fiches hors circulation, ses résultats d'examen.
 
-**Et surtout : le script de construction refuse maintenant de produire un
-fichier où une entrée du tiroir n'aurait pas d'équivalent dans le menu.**
-Cette régression ne peut plus être relivrée.
+La révision ciblée n'est pas décorative : elle nomme le type d'erreur qui pèse
+le plus lourd dans son calcul de préparation — connaissance, compréhension ou
+concentration — avec le pourcentage réel et le bon remède pour chacun.
 
-## 2. L'écran de garde ne rejouait jamais après une actualisation
+### Trois onglets, comme prévu
 
-J'avais posé un verrou « une seule fois par session ». L'intention était de ne
-pas rejouer le logo à chaque changement d'écran — mais l'application ne
-recharge jamais la page quand on change d'écran. Le seul cas où le verrou
-intervenait était donc **l'actualisation**, précisément celui où vous vouliez
-le voir.
+**Aujourd'hui · Réviser · Où j'en suis**, plus l'accès au menu complet.
+« Où j'en suis » est l'ancien écran d'accueil, inchangé : les chiffres n'ont pas
+disparu, ils ont simplement cessé d'être la première chose qu'on voit.
 
-Vérifié en direct sur votre navigateur : la clé `etg_splash` valait déjà `1`.
-**Verrou retiré** : le logo joue à chaque chargement de page.
+### Les consignes, côté formateur
 
-## 3. La page blanche au rechargement — le service worker
+Dans la fiche d'un stagiaire, un bloc **Consignes** : le champ pour écrire, une
+étiquette facultative (« Distances », « Méthode »…), et l'historique de ce qui a
+été envoyé — avec la mention **lue / pas encore lue**.
 
-Je n'ai pas pu reproduire votre cas exact sans la tablette, mais l'analyse du
-service worker a mis au jour trois défauts réels, dont un qui produit
-littéralement une page blanche :
+**Un mot sur la sécurité de cette table.** Le stagiaire lit ses consignes, il
+n'a aucun droit d'écriture dessus. Lui donner le droit de mettre à jour ses
+propres lignes — même dans la seule intention de le laisser marquer une
+consigne comme lue — lui aurait aussi permis d'en réécrire le texte. Le
+marquage passe donc par une fonction dédiée côté base, qui ne touche qu'à la
+date de lecture. **Vérifié sur un vrai PostgreSQL** : un stagiaire qui tente de
+réécrire sa consigne obtient 0 ligne modifiée, et qui tente de marquer celle
+d'un camarade obtient un résultat vide.
 
-**a) Une page blanche par construction.** En cas d'échec réseau, le service
-worker répondait `caches.match(APP_SHELL)`. Si l'application n'était pas dans
-le cache, cela vaut `undefined` — et `respondWith(undefined)` provoque une
-erreur réseau, donc **un écran vide**. Il y a désormais une réponse de dernier
-recours : une page lisible « Connexion indisponible » avec un bouton
-« Réessayer ». Il n'est plus possible d'aboutir à un écran vide.
+## 3. Les séries en double — la cause, et la fin
 
-**b) Une installation pouvait « réussir » avec un cache vide.** Chaque mise en
-cache était enveloppée dans un `.catch(()=>{})`. L'installation se déclarait
-donc réussie même si l'application n'avait pas été enregistrée, puis
-l'activation **supprimait les anciens caches**. Fenêtre exacte du symptôme :
-nouvelle version déployée + réseau instable + rechargement = plus rien.
-Désormais l'enregistrement de l'application est **obligatoire** : s'il échoue,
-l'installation échoue et l'ancien service worker continue de servir.
+37,7 % de votre table. J'ai remonté trois causes et je les traite toutes :
 
-**c) Le cache se remplissait de copies de 1,2 Mo.** Vos réécritures Vercel
-renvoient l'application pour *toute* adresse. Chaque adresse visitée stockait
-donc sa propre copie complète. Le quota du navigateur — plus étroit sur
-tablette — était atteint en quelques visites, et les mises en cache échouaient
-ensuite en silence. Les navigations sont maintenant lues et écrites sous une
-clé unique.
+| Cause | Correctif |
+|---|---|
+| Le bouton « Enregistrer » restait actif pendant l'envoi | Il se verrouille et affiche « Enregistrement… » |
+| La série n'avait aucun identifiant propre | Chaque série reçoit le sien dès sa création et le garde |
+| Le renvoi hors ligne relançait un enregistrement **déjà réussi** | Un refus pour identifiant déjà présent vaut désormais réussite |
 
-Si la page blanche persiste après ce déploiement, dites-le-moi : il me faudra
-alors la tablette elle-même (modèle, navigateur) pour aller plus loin.
+Le troisième était le plus pervers : si le serveur enregistre mais que la
+réponse se perd en route — exactement ce qui arrive quand le réseau revient et
+reste instable — l'application croyait à un échec et renvoyait la série.
 
-## 4. L'espace formateur (déjà dans la 4.2, rappelé ici)
+**Votre base était déjà prête.** La colonne `client_uid` et son index unique
+existent depuis le script d'origine ; c'est l'application qui ne les utilisait
+pas. Le script de cette version ne fait donc que vérifier leur présence : poser
+un second index identique aurait doublé le travail d'écriture à chaque série.
 
-- La bride `.as.wd{max-width:760px}`, propre au rôle formateur, est levée.
-  **Mesuré en direct sur votre application le 20/08/2026 : 508 px de contenu
-  dans une fenêtre de 1920 px.** C'est corrigé.
-- Écran d'accueil **« Prêts à présenter ? »** avec alertes calculées sur vos
-  données réelles.
-- Liste en **tableau dense et triable** au-delà de 1000 px, cartes en dessous.
-- Filtres regroupés sur une bande au lieu de quatre cartes empilées.
+### Un défaut trouvé grâce au vrai PostgreSQL
+
+`client_uid` est de type **uuid**. Ma première version générait, sur les
+navigateurs sans `crypto.randomUUID` — Safari avant 15.4, Android anciens — une
+chaîne aléatoire quelconque, que PostgreSQL aurait refusée : *invalid input
+syntax for type uuid*. **Sur ces appareils, plus aucune série n'aurait pu être
+enregistrée.** Corrigé : la composition de secours produit un UUID version 4 en
+bonne et due forme. Vérifié sur 20 000 tirages sans aucun générateur
+cryptographique : 20 000 UUID valides, 20 000 distincts.
 
 ---
 
 ## Ce qui a été vérifié
 
-**Sur votre application réelle** (Chrome 151, Windows, 1920 px, 48 stagiaires,
-1 000 séries, 32 résultats d'examen) : aucune erreur JavaScript au chargement,
-et confirmation directe du bridage à 760 px et du verrou d'écran de garde.
+**Base de données, sur un vrai PostgreSQL 16**
 
-**Sur le banc, version 4.3** :
+- script rejoué **3 fois de suite** : 5 contrôles sur 5 en « OK » à chaque
+  passage, aucune erreur ;
+- **10 tests de sécurité**, tous conformes : le formateur écrit et lit tout ; le
+  stagiaire ne voit que ses propres consignes ; il ne peut ni en créer, ni en
+  réécrire, ni en supprimer ; il peut marquer la sienne comme lue et pas celle
+  d'un autre ; l'index unique refuse bien un second envoi du même identifiant ;
+  les lignes anciennes sans identifiant continuent de coexister.
 
-- 9 largeurs × 2 rôles : aucun débordement, aucune erreur, aucun identifiant
-  dupliqué ;
-- 34 écrans enchaînés à 1440 px et à 390 px : 34 sur 34 ;
-- **atteignabilité des contenus** — catégories C et B, à 1920 / 1024 / 768 /
-  390 px : **15/15 et 10/10 entrées joignables**, avec une voie d'accès valide
-  à chaque largeur ;
-- démarrage réel en HTTP avec service worker actif : écran de garde présent au
-  premier chargement **et à chaque rechargement**.
+**Application, sur le banc**
 
-## Ce qui vient ensuite (4.4)
+- 9 largeurs × 2 rôles : aucun débordement, aucune erreur JavaScript, aucun
+  identifiant HTML dupliqué ;
+- **40 écrans enchaînés** à 1440 px et à 390 px : 40 sur 40 ;
+- atteignabilité des contenus : **16/16** entrées pour la catégorie C, **11/11**
+  pour la B, à 1920 / 1024 / 768 / 390 px.
 
-L'espace stagiaire conforme à la maquette : écran **Aujourd'hui** (consigne du
-formateur, action unique du jour, bloc « Ensuite »), **Réviser**, **Où j'en
-suis**. Il s'accompagnera d'une nouvelle table Supabase `consignes` et de
-l'interface formateur pour écrire ces consignes — avec son script SQL.
+## Ce qui reste ouvert
+
+- Le nettoyage des 377 doublons déjà présents. Il n'est **pas** dans ce script :
+  supprimer des données doit être une décision, pas un effet de bord. Vos
+  statistiques sont justes malgré eux, l'application les ignore à la lecture.
+  Dites-moi si vous voulez ce script de nettoyage.
+- Signalés lors de l'audit et non traités : la reprise silencieuse d'une erreur
+  de chargement dans `loadFCState`, l'archivage possible sur un PDF vide,
+  `window._S` non purgé à la déconnexion, les scripts externes chargés sans
+  empreinte d'intégrité.

@@ -7,7 +7,7 @@
    IMPORTANT — a chaque mise en ligne, incrementer CACHE_NAME. C'est ce
    changement de nom qui declenche la purge de l'ancien cache a l'activation ;
    sans lui, les telephones deja equipes conservent l'ancienne version. */
-const CACHE_NAME='etg-cache-v7';
+const CACHE_NAME='etg-cache-v8';
 const APP_SHELL='/etg-cfpc-gh-v3.1.html';
 
 /* Mises en cache des l'installation. La coquille est OBLIGATOIRE : si elle

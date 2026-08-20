@@ -1024,6 +1024,97 @@ select{appearance:none;-webkit-appearance:none;padding-right:34px;
 }
 
 
+/* ---------------------------------------------------------------------------
+   ESPACE STAGIAIRE — ecran "Aujourd'hui"
+   Copyright (c) 2025 Haussmann Begue & Georges Hoareau. Tous droits reserves.
+
+   Une hierarchie tres marquee, volontairement : la consigne du formateur, puis
+   UNE action, puis le reste. Sur grand ecran la colonne de lecture est bornee —
+   une ligne de texte de 1 300 px ne se lit pas, et cet ecran n'a pas de tableau
+   a etaler.
+   ------------------------------------------------------------------------ */
+
+.stj-sub{font-size:13px;color:var(--mu);margin:-.6rem 0 1rem}
+.stj-sect{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--mu);margin:1.4rem 0 .6rem}
+.stj-note{font-size:11.5px;color:var(--mu);line-height:1.55;margin-top:1rem;
+  border-left:3px solid var(--bd);padding-left:11px}
+.stj-note a{color:var(--b)}
+
+/* ===== Consigne du formateur ============================================= */
+.stj-cons{background:#F4F8FC;border:1px solid #D6E3F2;border-left:4px solid var(--b);
+  border-radius:12px;padding:13px 15px;margin-bottom:1rem}
+.stj-cons.lue{background:var(--sf);border-left-color:var(--bd)}
+.stj-cons-h{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
+.stj-cons-g{font-size:16px;line-height:1}
+.stj-cons-t{font-size:13px;font-weight:700;color:var(--b)}
+.stj-cons-d{margin-left:auto;font-size:11.5px;color:var(--mu)}
+.stj-cons-x{font-size:14px;line-height:1.55}
+.stj-cons-p{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.stj-cons-p .btn{margin-left:auto}
+.stj-cons-p .btn+.btn{margin-left:0}
+.stj-lue{font-size:12px;color:var(--ok);font-weight:600;margin-left:auto}
+
+/* ===== L'action du jour ================================================== */
+.stj-hero{background:var(--b);color:#fff;border-radius:14px;padding:17px 18px 18px}
+.stj-k{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+  color:rgba(255,255,255,.72)}
+.stj-t{font-size:19px;font-weight:700;margin:5px 0 3px;line-height:1.25}
+.stj-s{font-size:12.5px;color:rgba(255,255,255,.82);line-height:1.45}
+.stj-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.22);margin:13px 0 0;overflow:hidden}
+.stj-bar i{display:block;height:100%;background:#5BD08A;border-radius:99px}
+.stj-go{display:block;width:100%;margin-top:14px;background:#fff;color:var(--b);
+  font-weight:700;font-size:15px;border:0;border-radius:10px;padding:13px}
+.stj-go:hover{background:#EEF3FA}
+.stj-go:focus-visible{outline:3px solid #fff;outline-offset:2px}
+
+/* ===== Ce qui vient ensuite ============================================== */
+.stj-liste{display:grid;gap:8px}
+.stj-suite{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--sf);border:1px solid var(--bd);border-radius:11px;padding:12px 14px;
+  cursor:pointer;font-family:var(--f);color:#1a1a1a}
+.stj-suite:focus-visible{outline:3px solid var(--c-dark);outline-offset:2px}
+.stj-si{flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:#EEF3FA;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+.stj-sx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.stj-st{font-size:14px;font-weight:600}
+.stj-ss{font-size:11.5px;color:var(--mu);line-height:1.4}
+.stj-sf{flex:0 0 auto;font-size:20px;color:var(--mu)}
+
+/* ===== Consignes cote formateur ========================================== */
+#consBloc textarea{width:100%;box-sizing:border-box;padding:9px 11px;border-radius:var(--r);
+  border:1px solid var(--bd);font-family:var(--f);font-size:13px;line-height:1.5;resize:vertical}
+#consBloc input[type=text]{padding:9px 11px;border-radius:var(--r);border:1px solid var(--bd);
+  font-family:var(--f);font-size:13px;box-sizing:border-box}
+.cons-hist{margin-top:12px;border-top:1px solid var(--bd);padding-top:10px;display:grid;gap:9px}
+.cons-l{position:relative;padding:9px 34px 9px 11px;background:var(--bg);border-radius:9px}
+.cons-lx{font-size:13px;line-height:1.5}
+.cons-lm{font-size:11px;color:var(--mu);margin-top:3px}
+.cons-sup{position:absolute;top:6px;right:6px;width:26px;height:26px;border:0;background:none;
+  color:var(--mu);cursor:pointer;border-radius:7px;font-size:13px;line-height:1}
+.cons-sup:hover{background:var(--kob);color:var(--ko)}
+.cons-sup:focus-visible{outline:3px solid var(--c-dark);outline-offset:-2px}
+
+/* ===== Grand ecran =======================================================
+   Cet ecran est fait de texte et de decisions, pas de tableaux : on borne la
+   colonne de lecture et on met la consigne et l'action cote a cote. */
+@media (min-width:1000px){
+  .stj-sub,.stj-cons,.stj-hero,.stj-sect,.stj-liste,.stj-note{max-width:780px}
+  .stj-t{font-size:21px}
+}
+@media (min-width:1280px){
+  /* Deux colonnes seulement s'il y a bien deux choses a montrer : sans
+     consigne, l'action du jour ne doit pas occuper une demi-largeur avec du
+     vide a cote. */
+  .stj-haut:not(.seul){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:16px;align-items:start;max-width:1100px}
+  .stj-haut:not(.seul) .stj-cons,.stj-haut:not(.seul) .stj-hero{max-width:none;margin-bottom:0}
+}
+@media (hover:hover) and (pointer:fine){
+  .stj-suite:hover{background:#F7FAFD;border-color:#C9D6E6}
+}
+
+
 
 /* ---------------------------------------------------------------------------
    ECRAN DE LANCEMENT — CFPC Georges Hoareau
@@ -1429,6 +1520,14 @@ function confirmNewSeries(){
   if(!confirm('Cela supprimera la grille en cours non terminée. Continuer ?'))return;
   clearDraft();GD=null;rGM(true);
 }
+/* Reconnait le refus de la base pour cause d'identifiant deja enregistre
+   (index unique series_client_uid_uniq, code PostgreSQL 23505). */
+function estDoublonRefuse(e){
+  var m=((e&&e.message)||'')+'';
+  return m.indexOf('23505')>=0
+      || m.toLowerCase().indexOf('duplicate key')>=0
+      || m.indexOf('series_client_uid_uniq')>=0;
+}
 function addPending(item){const k=pendKey();if(!k)return;let arr=[];try{arr=JSON.parse(localStorage.getItem(k)||'[]');}catch(e){}
   arr.push(item);try{localStorage.setItem(k,JSON.stringify(arr));}catch(e){}updateOffBar();}
 function getPending(){const k=pendKey();if(!k)return[];try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return[];}}
@@ -1447,7 +1546,14 @@ async function trySyncPending(){
   const remaining=[];
   for(const item of arr){
     try{await api('series',{m:'POST',b:item});}
-    catch(e){remaining.push(item);}
+    catch(e){
+      /* Refus pour identifiant deja present : l'enregistrement precedent avait
+         donc REUSSI, seule sa reponse s'etait perdue. La serie est en base, il
+         ne faut surtout pas la renvoyer — c'est ainsi que se creaient les
+         doublons. On la retire de la file. */
+      if(estDoublonRefuse(e))continue;
+      remaining.push(item);
+    }
   }
   setPending(remaining);
 }
@@ -1666,7 +1772,11 @@ function enterApp(){
       document.querySelectorAll('#stb .ti').forEach(x=>x.classList.remove('ac2'));
       if(GD.step==='p3')rP3();else if(GD.step==='p2')rP2();else rP1();
     }else{
-      stag('a',document.querySelector('#stb .ti'));
+      /* Le stagiaire arrive sur "Aujourd'hui" : une consigne, une action.
+         La reprise d'une serie en cours garde la priorite (branche ci-dessus),
+         y compris hors ligne — ce comportement n'est pas touche. */
+      if(typeof rAujourdhui==='function')rAujourdhui();
+      else stag('a',document.querySelector('#stb .ti'));
     }
   }
 }
@@ -3705,6 +3815,7 @@ function drawerGo(cle){
   /* Changer d'ecran arrete la lecture en cours : sinon la voix continue de
      lire un contenu que le stagiaire ne voit plus. */
   if(typeof ttsStopSiEcranChange==='function')ttsStopSiEcranChange();
+  if(cle==='today'){rAujourdhui();return;}
   if(cle==='a'){stag('a',null);return;}
   if(cle==='g'){stag('g',null);return;}
   if(cle==='h'){stag('h',null);return;}
@@ -3856,7 +3967,8 @@ function buildDrawer(){
     return;
   }
   title.textContent='Menu';
-  var h=dItem('&#127968;','Accueil',"drawerGo('a')")
+  var h=dItem('&#9728;&#65039;','Aujourd\'hui',"drawerGo('today')")
+    +dItem('&#127968;','Où j\'en suis',"drawerGo('a')")
     /* Un point d'entree unique vers les resultats d'examen : le stagiaire y
        voit les epreuves de SA categorie, toutes ses presentations passees, et
        peut en declarer une nouvelle apres un ajournement. Les entrees
@@ -4848,6 +4960,12 @@ function startG(){
   const date=document.getElementById('gd').value;
   if(!dvd||!ser){alert('Veuillez saisir le n° DVD et le n° série');return;}
   GD={date,dvd,ser,step:'p1',
+    /* Identifiant propre a CETTE saisie, attribue une fois pour toutes et
+       conserve dans le brouillon. S'il faut renvoyer la serie plus tard, elle
+       repart avec le meme : la base saura que c'est la meme et n'en gardera
+       qu'une. C'est ce qui manquait — la colonne existait, personne ne la
+       remplissait. */
+    client_uid:nouvelIdentifiant(),
     reps:Array(40).fill(null).map(()=>({r:[],c:null})),
     bon:Array(40).fill(null).map(()=>[]),
     te:Array(40).fill(null)
@@ -5055,6 +5173,46 @@ function rEL(){
 function sTE(i,v){GD.te[i]=v;saveDraft();}
 
 async function saveG(){
+  /* Verrou anti-double-appui : sur telephone, un appui un peu long ou un
+     ecran qui rame se traduit tres facilement par deux envois. */
+  if(window._envoiEnCours)return;
+  window._envoiEnCours=true;
+  var _btn=document.querySelector('button[onclick="saveG()"]');
+  if(_btn){_btn.disabled=true;_btn.textContent='Enregistrement…';}
+  try{ await saveGInterne(); }
+  finally{
+    window._envoiEnCours=false;
+    if(_btn&&_btn.isConnected){_btn.disabled=false;_btn.textContent='Enregistrer et analyser \u2713';}
+  }
+}
+
+/* Identifiant unique d'une saisie.
+
+   La colonne series.client_uid est de type UUID cote base : tout ce qui n'est
+   pas un UUID valide est refuse par PostgreSQL, et l'enregistrement echoue.
+   Une premiere version de cette fonction renvoyait une chaine aleatoire
+   quelconque quand crypto.randomUUID etait absent — c'est-a-dire sur Safari
+   avant 15.4 et les Android anciens. L'erreur a ete trouvee en rejouant le
+   script sur un vrai PostgreSQL : "invalid input syntax for type uuid".
+
+   La composition de secours produit donc un UUID version 4 en bonne et due
+   forme, avec ou sans generateur aleatoire cryptographique. */
+function nouvelIdentifiant(){
+  try{ if(window.crypto&&crypto.randomUUID)return crypto.randomUUID(); }catch(e){}
+  var o=null;
+  try{
+    if(window.crypto&&crypto.getRandomValues){o=new Uint8Array(16);crypto.getRandomValues(o);}
+  }catch(e){o=null;}
+  if(!o){o=[];for(var i=0;i<16;i++)o.push(Math.floor(Math.random()*256));}
+  o[6]=(o[6]&0x0f)|0x40;   /* version 4 */
+  o[8]=(o[8]&0x3f)|0x80;   /* variante RFC 4122 */
+  var h=[];
+  for(var j=0;j<16;j++)h.push(('0'+o[j].toString(16)).slice(-2));
+  return h.slice(0,4).join('')+'-'+h.slice(4,6).join('')+'-'+h.slice(6,8).join('')
+       +'-'+h.slice(8,10).join('')+'-'+h.slice(10,16).join('');
+}
+
+async function saveGInterne(){
   const qs=GD.reps.map((r,i)=>{
     const bon=GD.bon[i];
     const rs=[...r.r].sort().join('');
@@ -5063,7 +5221,8 @@ async function saveG(){
     return{num:i+1,rep:r.r,cert:r.c,bonne:bon,correct,typeErreur:GD.te[i]};
   });
   const score=qs.filter(q=>q.correct&&q.bonne.length>0).length;
-  const payload={stagiaire_id:CP.id,date:GD.date,dvd:GD.dvd,serie:GD.ser,score,questions:qs};
+  const payload={stagiaire_id:CP.id,date:GD.date,dvd:GD.dvd,serie:GD.ser,score,questions:qs,
+    client_uid:GD.client_uid||nouvelIdentifiant()};
   try{
     const ex=await api('series?stagiaire_id=eq.'+CP.id+'&date=eq.'+GD.date+'&select=id');
     payload.num_serie=(ex||[]).length+1;
@@ -6980,6 +7139,7 @@ async function showStag(i){
     +'<div class="cd"><div class="cdt">&#9998; Fiche du stagiaire</div>'
       +'<p style="font-size:12px;color:var(--mu);margin-bottom:8px">Nom, catégorie de formation, adresse électronique, mot de passe.</p>'
       +'<button class="btn ba bs" style="width:100%" onclick="rEditStag(\''+stag.id+'\')">Modifier la fiche</button></div>'
+    +consigneBlocFormateur(stag)
     +archiveBtnHtml(stag);
   window._S.curActive=active;
   if(asc.length>1){
@@ -8603,18 +8763,21 @@ function apNavItems(){
   if(CP&&CP.role==='formateur'){
     return [
       {id:'f_b', g:'&#127919;', t:'Tableau de bord',     c:'Bord',       mob:1, go:"rFBoard()"},
-      {id:'f_b', g:'&#127919;', t:'Tableau de bord',     c:'Bord',       mob:1, go:"rFBoard()"},
       {id:'f_s', g:'&#128101;', t:'Tous les stagiaires', c:'Stagiaires', mob:1, go:"fTab('s',null)"},
       {id:'f_k', g:'&#128200;', t:'Statistiques',        c:'Stats',      mob:1, go:"fTab('k',null)"}
     ];
   }
   var dispo=function(k){return (typeof contenuDisponible==='function')?contenuDisponible(k):true;};
   var it=[
-    {id:'a',        g:'&#127968;', t:'Accueil',                c:'Accueil',   mob:1, go:"drawerGo('a')"},
-    {id:'resultats',g:'&#128202;', t:"Mes résultats d'examen", c:'Résultats', mob:1, go:"drawerGo('resultats')"},
+    /* Les trois entrees marquees mob forment la barre du bas sur telephone :
+       Aujourd'hui, Reviser, Ou j'en suis — plus l'acces au menu complet.
+       C'est la structure de la maquette validee. */
+    {id:'today',    g:'&#9728;&#65039;', t:"Aujourd'hui",      c:"Aujourd'hui", mob:1, go:"drawerGo('today')"},
+    {id:'cours',    g:'&#128214;', t:'Réviser — Cours ETG',    c:'Réviser',   mob:1, go:"drawerGo('cours')"},
+    {id:'a',        g:'&#127968;', t:"Où j'en suis",           c:"Où j'en suis", mob:1, go:"drawerGo('a')"},
+    {id:'resultats',g:'&#128202;', t:"Mes résultats d'examen", c:'Résultats',        go:"drawerGo('resultats')"},
     {sep:'ETG'},
-    {id:'g',        g:'&#128203;', t:'Saisir une série',       c:'Série',     mob:1, go:"drawerGo('g')"},
-    {id:'cours',    g:'&#128214;', t:'Cours ETG',              c:'Cours',     mob:1, go:"drawerGo('cours')"},
+    {id:'g',        g:'&#128203;', t:'Saisir une série',       c:'Série',            go:"drawerGo('g')"},
     {id:'panneaux', g:'&#128682;', t:'Panneaux',               c:'Panneaux',         go:"drawerGo('panneaux')"},
     {id:'h',        g:'&#128336;', t:'Historique',             c:'Historique',       go:"drawerGo('h')"},
     {id:'etgfin',   g:'&#127891;', t:'Fin de formation ETG',   c:'Fin ETG',          go:"drawerGo('etgfin')"}
@@ -9081,6 +9244,303 @@ function fListeRendu(ctx){
   return entete
     +'<div class="lsf-tbl"><table><thead><tr>'+th+'</tr></thead><tbody>'+lignes+'</tbody></table></div>'
     +'<div class="lsf-cds">'+cartes+'</div>';
+}
+
+
+/* ============================================================================
+   ESPACE STAGIAIRE — "Aujourd'hui", consignes du formateur
+   Copyright (c) 2025 Haussmann Begue & Georges Hoareau — Tous droits reserves.
+
+   CE QUI N'ALLAIT PAS
+
+   L'ecran d'accueil du stagiaire etait un tableau de bord : quatre chiffres,
+   une courbe, un historique d'examens. Beaucoup d'information, aucune
+   direction. Un stagiaire qui ouvre l'application le matin ne se demande pas
+   "quelle est ma moyenne", il se demande "je fais quoi maintenant".
+
+   CE QUE FAIT CE MODULE
+
+   - rAujourdhui()  Une consigne, une action, et ce qui vient ensuite.
+                    C'est l'ecran d'arrivee du stagiaire.
+   - rConsignes()   Toutes les consignes recues, la plus recente en tete.
+   - Cote formateur, un bloc dans la fiche du stagiaire pour ecrire une
+     consigne et relire celles deja envoyees.
+
+   Les chiffres n'ont pas disparu : ils sont sous "Ou j'en suis", qui reste
+   l'ancien ecran d'accueil, inchange.
+
+   POURQUOI UNE SEULE ACTION
+   Proposer trois choses a faire, c'est demander a quelqu'un qui doute de
+   choisir. L'ecran tranche a sa place, selon une priorite fixe :
+     1. une serie commencee et non terminee  -> la reprendre ;
+     2. aucune serie aujourd'hui             -> en faire une ;
+     3. la serie du jour est faite           -> reviser ses erreurs.
+   Le reste passe sous "Ensuite", visible mais secondaire.
+   ========================================================================= */
+
+/* --- Consignes : lecture, ecriture, marquage ------------------------------ */
+/* La table `consignes` est protegee : le stagiaire lit les siennes, seul le
+   formateur ecrit. Le marquage "lue" passe par une fonction dediee cote base
+   (consigne_marquer_lue) : une regle d'ecriture ordinaire aurait aussi permis
+   au stagiaire de reecrire le texte de sa propre consigne. */
+async function consLire(stagId, limite){
+  try{
+    return await api('consignes?stagiaire_id=eq.'+stagId
+      +'&order=created_at.desc&limit='+(limite||20)+'&select=*')||[];
+  }catch(e){
+    /* Table absente (migration 03 pas encore passee) ou reseau : l'ecran doit
+       fonctionner sans, pas se bloquer. */
+    return null;
+  }
+}
+
+async function consMarquerLue(id){
+  try{ await api('rpc/consigne_marquer_lue',{m:'POST',b:{p_id:id},pf:'return=minimal'}); }
+  catch(e){/* sans consequence : la consigne restera simplement non lue */}
+}
+
+function consDateFr(iso){
+  if(!iso)return '';
+  var d=new Date(iso), n=new Date();
+  var j=Math.floor((n-d)/86400000);
+  if(j<=0)return "Aujourd'hui";
+  if(j===1)return 'Hier';
+  if(j<7)return 'Il y a '+j+' jours';
+  var p=String(iso).slice(0,10).split('-');
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+function consCarte(c,avecBouton){
+  return '<div class="stj-cons'+(c.lue_at?' lue':'')+'">'
+    +'<div class="stj-cons-h">'
+      +'<span class="stj-cons-g" aria-hidden="true">&#128172;</span>'
+      +'<span class="stj-cons-t">Consigne de ton formateur</span>'
+      +'<span class="stj-cons-d">'+consDateFr(c.created_at)+'</span></div>'
+    +'<div class="stj-cons-x">'+esc(c.texte)+'</div>'
+    +'<div class="stj-cons-p">'
+      +(c.theme?'<span class="bk bct">'+esc(c.theme)+'</span>':'<span></span>')
+      +(avecBouton
+        ? (c.lue_at
+            ? '<span class="stj-lue">&#10003; lue</span>'
+            : '<button class="btn bg bs" onclick="consLu(\''+c.id+'\')">J\'ai lu</button>')
+          +'<button class="btn bg bs" onclick="rConsignes()">Toutes les consignes</button>'
+        : '')
+    +'</div></div>';
+}
+
+async function consLu(id){
+  await consMarquerLue(id);
+  rAujourdhui();
+}
+
+/* --- Ecran "Toutes les consignes" ---------------------------------------- */
+async function rConsignes(){
+  var mc=document.getElementById('mc');
+  if(!mc)return;
+  if(typeof AP_ACTIF!=='undefined')AP_ACTIF='today';
+  mc.innerHTML='<div class="empty">Chargement...</div>';
+  var l=await consLire(CP.id,50);
+  mc.innerHTML='<button class="btn bg bs" onclick="rAujourdhui()" style="margin-bottom:12px">&#8592; Retour à aujourd\'hui</button>'
+    +'<h2 class="pt">Consignes de ton formateur</h2>'
+    +(l===null
+      ? '<div class="empty">Les consignes ne sont pas encore disponibles.</div>'
+      : (l.length
+          ? l.map(function(c){return consCarte(c,false);}).join('')
+          : '<div class="empty">Aucune consigne pour le moment.</div>'));
+}
+
+/* --- Ce que le stagiaire doit faire maintenant ----------------------------- */
+/* Une seule action, choisie selon une priorite fixe. La fonction renvoie de
+   quoi construire la grande carte bleue : titre, sous-titre, bouton, et une
+   barre d'avancement quand elle a un sens. */
+function stjAction(sr,brouillon){
+  if(brouillon){
+    var faites=(brouillon.reps||[]).filter(function(r){return r&&r.r&&r.r.length;}).length;
+    var phase=brouillon.step==='p3'?3:(brouillon.step==='p2'?2:1);
+    return {cle:'Série en cours', titre:'Reprendre ton test de code',
+      sous:'Phase '+phase+' sur 3 · '+faites+' questions sur 40',
+      pct:Math.round(faites/40*100),
+      bouton:'Continuer &rarr;', go:"stag('g',null)"};
+  }
+  var auj=new Date().toISOString().slice(0,10);
+  var duJour=(sr||[]).filter(function(s){return s.date===auj;}).length;
+  if(!duJour){
+    return {cle:'À faire aujourd\'hui', titre:'Faire ta série du jour',
+      sous:(sr&&sr.length)?'Ta dernière série : '+sr[0].score+'/40':'Ta première série',
+      pct:null, bouton:'Commencer &rarr;', go:"stag('g',null)"};
+  }
+  return {cle:'Série du jour faite', titre:'Revoir tes erreurs',
+    sous:duJour+' série'+(duJour>1?'s':'')+' aujourd\'hui · '
+      +'la révision est ce qui fait progresser, pas le nombre de séries',
+    pct:null, bouton:'Réviser &rarr;', go:"drawerGo('cours')"};
+}
+
+/* Type d'erreur dominant sur les cinq dernieres seances. C'est le signal qui
+   pese le plus lourd dans le calcul de readiness() ; on le formule ici dans
+   le vocabulaire du stagiaire, sans note ni verdict. */
+var STJ_ERR={
+  1:{t:'des erreurs de connaissance', a:'Ce sont des règles pas encore sues. Le cours est le bon remède.',   go:"drawerGo('cours')",   b:'Revoir le cours'},
+  2:{t:'des erreurs de compréhension', a:'Les règles sont sues mais mal appliquées à la situation. Les panneaux et les mises en situation aident.', go:"drawerGo('panneaux')", b:'Revoir les panneaux'},
+  3:{t:'des erreurs de concentration', a:'Tu sais, mais tu vas trop vite. Relis chaque question en entier avant de valider.', go:"drawerGo('cours')", b:'S\'entraîner'}
+};
+function stjDominante(sr){
+  var pool=(sr||[]).slice(0,5), c={1:0,2:0,3:0}, tot=0;
+  pool.forEach(function(s){(s.questions||[]).forEach(function(q){
+    if(q.typeErreur===1||q.typeErreur===2||q.typeErreur===3){c[q.typeErreur]++;tot++;}
+  });});
+  if(!tot)return null;
+  var k=(c[1]>=c[2]&&c[1]>=c[3])?1:((c[2]>=c[3])?2:3);
+  return {type:k, nb:c[k], total:tot, part:Math.round(c[k]/tot*100)};
+}
+
+function stjLigne(icone,titre,sous,etiquette,couleur,go){
+  return '<button type="button" class="stj-suite" onclick="'+go+'">'
+    +'<span class="stj-si" aria-hidden="true">'+icone+'</span>'
+    +'<span class="stj-sx"><span class="stj-st">'+titre+'</span>'
+      +'<span class="stj-ss">'+sous+'</span></span>'
+    +(etiquette?'<span class="bk '+couleur+'">'+etiquette+'</span>':'')
+    +'<span class="stj-sf" aria-hidden="true">&rsaquo;</span></button>';
+}
+
+/* --- L'ecran ------------------------------------------------------------- */
+async function rAujourdhui(){
+  var mc=document.getElementById('mc');
+  if(!mc)return;
+  if(typeof AP_ACTIF!=='undefined')AP_ACTIF='today';
+  mc.innerHTML='<div class="empty">Chargement...</div>';
+
+  var sr=[], cons=null;
+  try{
+    var r=await Promise.all([
+      api('series?stagiaire_id=eq.'+CP.id+'&order=created_at.desc&select=*'),
+      consLire(CP.id,5)
+    ]);
+    sr=dedupSeries(r[0]||[]).filter(function(s){return !s.exclu;});
+    cons=r[1];
+  }catch(e){
+    mc.innerHTML='<h2 class="pt">Bonjour '+esc(String(CP.nom||'').split(' ')[0])+'</h2>'
+      +'<div class="empty">&#128268; Impossible de charger tes données (hors ligne).<br>'
+      +'Réessaie dès que la connexion revient.</div>'
+      +'<button class="btn ba mt" onclick="rAujourdhui()">&#8635; Réessayer</button>';
+    return;
+  }
+  sr.sort(function(a,b){return a.date<b.date?1:(a.date>b.date?-1:0);});
+
+  var brouillon=(typeof loadDraft==='function')?loadDraft():null;
+  var act=stjAction(sr,brouillon);
+  var dom=stjDominante(sr);
+  var mod=(typeof moduleForCat==='function')?moduleForCat(CP.categorie):null;
+
+  /* La consigne non lue passe avant tout le reste. C'est une consigne, pas une
+     notification : elle reste en tete tant qu'elle n'est pas marquee lue. */
+  var aLire=(cons&&cons.length)?(cons.filter(function(c){return !c.lue_at;})[0]||null):null;
+
+  var h='<h2 class="pt">Aujourd\'hui</h2>'
+    +'<p class="stj-sub">Une seule chose à faire maintenant.</p>';
+
+  /* Consigne et action du jour cote a cote sur grand ecran, empilees en
+     dessous — d'ou le conteneur, meme quand il n'y a pas de consigne. */
+  h+='<div class="stj-haut'+(aLire?'':' seul')+'">'
+    +(aLire?consCarte(aLire,true):'')
+    +'<div class="stj-hero">'
+      +'<div class="stj-k">'+act.cle+'</div>'
+      +'<div class="stj-t">'+act.titre+'</div>'
+      +'<div class="stj-s">'+act.sous+'</div>'
+      +(act.pct!==null?'<div class="stj-bar"><i style="width:'+act.pct+'%"></i></div>':'')
+      +'<button class="btn stj-go" onclick="'+act.go+'">'+act.bouton+'</button>'
+    +'</div></div>';
+
+  var suites=[];
+  if(dom){
+    var e=STJ_ERR[dom.type];
+    suites.push(stjLigne('&#128260;','À revoir : '+e.t,
+      dom.part+' % de tes erreurs récentes · '+e.a, 'ciblé','bwa', e.go));
+  }
+  if(mod){
+    suites.push(stjLigne('&#128218;','Tes fiches '+(mod==='C'?'(200 questions)':mod),
+      'Épreuve hors circulation de ta catégorie', 'à faire','bct',
+      "stag('"+(mod==='C'?'fc':(mod==='D'?'fd':'fce'))+"',null)"));
+  }
+  suites.push(stjLigne('&#128202;','Mes résultats d\'examen',
+    'Déclarer un résultat, consulter tes présentations passées','','',"drawerGo('resultats')"));
+
+  h+='<div class="stj-sect">Ensuite</div><div class="stj-liste">'+suites.join('')+'</div>';
+
+  if(cons===null){
+    h+='<p class="stj-note">Les consignes de ton formateur apparaîtront ici.</p>';
+  }else if(!aLire&&cons.length){
+    h+='<p class="stj-note">Tu as lu toutes tes consignes. '
+      +'<a href="#" onclick="rConsignes();return false">Les relire</a>.</p>';
+  }else if(aLire){
+    h+='<p class="stj-note">La consigne de ton formateur reste en tête tant que tu ne l\'as pas '
+      +'marquée comme lue. C\'est le seul élément qui peut passer avant ton action du jour.</p>';
+  }
+
+  mc.innerHTML=h;
+  if(typeof buildApNav==='function')buildApNav('today');
+}
+
+/* --- Cote formateur : ecrire une consigne dans la fiche du stagiaire ------- */
+function consigneBlocFormateur(stag){
+  /* Le bloc se remplit apres l'insertion du gabarit : showStag() ecrit tout
+     son ecran d'un coup, on ne peut pas l'attendre ici. */
+  setTimeout(function(){consChargerFormateur(stag.id);},0);
+  return '<div class="cd" id="consBloc"><div class="cdt">&#128172; Consignes</div>'
+    +'<p class="empty" style="padding:1rem 0">Chargement...</p></div>';
+}
+
+async function consChargerFormateur(stagId){
+  var el=document.getElementById('consBloc');
+  if(!el)return;
+  var l=await consLire(stagId,20);
+  if(l===null){
+    el.innerHTML='<div class="cdt">&#128172; Consignes</div>'
+      +'<p style="font-size:12px;color:var(--mu)">Les consignes ne sont pas encore disponibles : '
+      +'le script SQL « migration 03 » n\'a pas été passé sur Supabase.</p>';
+    return;
+  }
+  el.innerHTML='<div class="cdt">&#128172; Consignes</div>'
+    +'<p style="font-size:12px;color:var(--mu);margin-bottom:8px">'
+    +'Ce message s\'affiche en tête de l\'écran « Aujourd\'hui » du stagiaire, '
+    +'et y reste tant qu\'il ne l\'a pas marqué comme lu.</p>'
+    +'<textarea id="consTexte" rows="3" placeholder="Ex. : Concentre-toi sur les distances d\'arrêt cette semaine, c\'est ce qui te coûte le plus de points."></textarea>'
+    +'<div class="rw" style="margin-top:8px">'
+      +'<input type="text" id="consTheme" placeholder="Étiquette (facultatif) : Distances, Méthode…" style="flex:1">'
+      +'<button class="btn bp bs" style="margin-left:8px" onclick="consEnvoyer(\''+stagId+'\')">Envoyer</button>'
+    +'</div>'
+    +(l.length?'<div class="cons-hist">'+l.map(function(c){
+        return '<div class="cons-l">'
+          +'<div class="cons-lx">'+esc(c.texte)+'</div>'
+          +'<div class="cons-lm">'+consDateFr(c.created_at)
+            +(c.theme?' · '+esc(c.theme):'')
+            +' · '+(c.lue_at?'lue par le stagiaire':'pas encore lue')+'</div>'
+          +'<button class="cons-sup" title="Supprimer cette consigne" '
+            +'onclick="consSupprimer(\''+c.id+'\',\''+stagId+'\')">&#10005;</button>'
+          +'</div>';
+      }).join('')+'</div>'
+      :'<p style="font-size:12px;color:var(--mu);margin-top:10px">Aucune consigne envoyée pour le moment.</p>');
+}
+
+async function consEnvoyer(stagId){
+  var t=document.getElementById('consTexte'), th=document.getElementById('consTheme');
+  var texte=(t&&t.value||'').trim();
+  if(!texte){alert('Écrivez d\'abord la consigne.');return;}
+  if(texte.length>800){alert('Consigne trop longue (800 caractères maximum).');return;}
+  try{
+    await api('consignes',{m:'POST',pf:'return=minimal',b:{
+      stagiaire_id:stagId, formateur_id:CP.id, texte:texte,
+      theme:(th&&th.value||'').trim()||null
+    }});
+    if(t)t.value='';if(th)th.value='';
+    consChargerFormateur(stagId);
+  }catch(e){ alert('Envoi impossible : '+(e.message||'erreur')); }
+}
+
+async function consSupprimer(id,stagId){
+  if(!confirm('Supprimer cette consigne ?'))return;
+  try{ await api('consignes?id=eq.'+id,{m:'DELETE',pf:'return=minimal'}); }
+  catch(e){ alert('Suppression impossible : '+(e.message||'erreur')); return; }
+  consChargerFormateur(stagId);
 }
 
 </script>
