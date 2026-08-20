@@ -1,155 +1,126 @@
-# À déposer à la racine de votre dépôt GitHub — version 4.2
+# À déposer à la racine de votre dépôt GitHub — version 4.3
 
 Copyright (c) 2025 Haussmann Begue & Georges Hoareau.
 
-**Supabase : rien à faire.** Aucune colonne, aucune table, aucune règle n'a changé
-depuis la 4.0 que vous avez déjà passée.
+**Supabase : rien à faire dans cette version.** (La table des consignes du
+formateur arrivera avec la 4.4, avec son script SQL.)
+
+Cette version remplace la 4.2 : ne déposez que celle-ci.
 
 ## Les 11 fichiers
 
-Déposez-les à la **racine** du dépôt (pas dans un sous-dossier) : GitHub remplace
-ceux qui existent déjà. Vercel redéploie tout seul.
+Déposez-les à la **racine** du dépôt. GitHub remplace ceux qui existent déjà,
+Vercel redéploie tout seul.
 
 ## Puis, impérativement
 
 Ouvrir le site → F12 → onglet **Application** → **Service Workers** → cocher
-« Update on reload » → recharger. Le cache doit afficher **`etg-cache-v6`**.
+« Update on reload » → recharger. Le cache doit afficher **`etg-cache-v7`**.
 
-Sans cette étape, les téléphones déjà équipés garderont l'ancienne version.
-
----
-
-## 1. Le défaut que vous avez photographié
-
-Votre capture montrait l'espace formateur occupant 760 px au milieu d'un écran
-de 1900 px. La cause est une deuxième bride que la version 4.1 avait manquée.
-
-La feuille de style d'origine en contient **deux** :
-
-```css
-.as    { max-width: 520px }   /* toute l'application */
-.as.wd { max-width: 760px }   /* + la classe "wd", posée par enterApp()
-                                 uniquement pour le rôle formateur */
-```
-
-La 4.1 ne levait que la première. `.as.wd` compte deux classes contre une : sa
-spécificité est supérieure, elle l'emportait donc même à l'intérieur d'une
-requête d'écran. Résultat : l'espace **stagiaire** s'étalait correctement,
-l'espace **formateur** restait bloqué à 760 px. Mesuré sur votre capture :
-menu 246 px + contenu 512 px = 758 px.
-
-Les deux brides sont maintenant levées, ainsi que celle du bandeau hors-ligne
-(`.offbar.wd`), qui s'affichait en timbre-poste au milieu de l'écran.
-
-Le script de construction refuse désormais de produire un fichier où l'une des
-deux ne serait pas neutralisée — cette régression ne peut plus repasser
-inaperçue.
-
-### Largeur réellement occupée par le contenu, espace formateur
-
-| Fenêtre | Avant (4.1) | Après (4.2) |
-|---|---|---|
-| 1920 px | 760 px | **1920 px** — contenu 1400 px |
-| 1600 px | 760 px | **1600 px** — contenu 1348 px |
-| 1440 px | 760 px | **1440 px** — contenu 1188 px |
-| 1280 px | 760 px | **1280 px** — contenu 1028 px |
-| 1024 px | 760 px | **1024 px** — contenu 772 px |
-| 390 px | 390 px | 390 px (inchangé) |
+J'ai vérifié en direct sur votre navigateur le 20/08/2026 : vous étiez encore
+en `etg-cache-v5`, c'est-à-dire en version 4.1. Sans cette étape, rien de ce qui
+suit n'arrivera jusqu'à vos stagiaires.
 
 ---
 
-## 2. Le tableau de bord formateur
+## 1. Huit contenus étaient devenus inatteignables — le défaut le plus grave
 
-C'est l'écran « Prêts à présenter ? » de la maquette. Il devient l'écran
-d'accueil du formateur : la première question du matin est « qui est prêt ? »,
-pas « qui est inscrit ? ».
+En 4.1 j'ai masqué le bouton hamburger au-delà de 700 px
+(`#drawerBtn{display:none}`) et je l'ai remplacé par le menu latéral. Sauf que
+le tiroir contenait **15 entrées** et que mon menu latéral n'en reprenait
+que 9. Sur ordinateur et sur tablette, ces huit-là n'étaient plus atteignables
+par aucun chemin :
 
-Il contient :
+Fin de formation ETG · 200 questions · Socles · Thèmes · Fiches orales ·
+Fin de formation Hors circulation · Astuces de conduite ·
+Fin de formation circulation
 
-- **quatre chiffres clés** : stagiaires suivis, prêts à présenter, profils à
-  risque, et *prêts sans date d'examen déclarée* ;
-- **la répartition du groupe** en une bande de proportions ;
-- **les alertes à traiter en priorité** ;
-- **trois colonnes** — Prêts / En progression / Profil à risque — chaque
-  stagiaire portant son composite, sa catégorie, son nombre de jours, son
-  dernier score, sa tendance et sa courbe de progression. Un clic ouvre la fiche.
+Sur téléphone elles restaient joignables par l'onglet « Menu » — c'est pour
+cela que le défaut est passé inaperçu chez moi et pas chez vous.
 
-### Les alertes sont calculées, pas écrites d'avance
+**Corrigé.** Le menu latéral est désormais le miroir exact du tiroir, groupes
+compris (ETG · Hors circulation · Circulation · Réglages), verrous inclus. Le
+routage passe par la même fonction qu'avant (`drawerGo`), donc aucune règle
+d'accès par catégorie n'a été réécrite.
 
-Dans la maquette, « Karim Benali — 11 erreurs de connaissance » était un exemple
-tapé à la main pour montrer la forme. Ici, chaque alerte sort de vos données :
+**Et surtout : le script de construction refuse maintenant de produire un
+fichier où une entrée du tiroir n'aurait pas d'équivalent dans le menu.**
+Cette régression ne peut plus être relivrée.
 
-| Alerte | Déclencheur |
-|---|---|
-| Erreurs de connaissance dominantes | qualité des erreurs < 40/100 sur les 5 dernières séances |
-| Se surestime | fiabilité < 50/100 |
-| Ajourné, sans reprise | résultat en échec + plus de 10 jours sans séance |
-| Sans séance depuis… | plus de 21 jours d'inactivité |
-| Prêt et sans date | niveau vert + aucun résultat d'examen déclaré |
+## 2. L'écran de garde ne rejouait jamais après une actualisation
 
-Chaque alerte nomme le stagiaire, affiche le chiffre qui la déclenche, dit quoi
-en faire, et s'ouvre sur sa fiche d'un clic. Deux alertes au maximum par
-famille : cinq fois le même motif n'apprend rien de plus que deux fois et
-masquerait les autres.
+J'avais posé un verrou « une seule fois par session ». L'intention était de ne
+pas rejouer le logo à chaque changement d'écran — mais l'application ne
+recharge jamais la page quand on change d'écran. Le seul cas où le verrou
+intervenait était donc **l'actualisation**, précisément celui où vous vouliez
+le voir.
 
-### Aucun calcul pédagogique n'a été réécrit
+Vérifié en direct sur votre navigateur : la clé `etg_splash` valait déjà `1`.
+**Verrou retiré** : le logo joue à chaque chargement de page.
 
-Le classement s'appuie sur le composite que l'application produisait déjà
-(performance 25 % · fiabilité 25 % · qualité des erreurs 50 %, fenêtre des
-5 dernières séances, pire séance écartée). La seule modification apportée à
-`readiness()` est qu'elle **renvoie en plus** sa valeur chiffrée et ses trois
-composantes. Le niveau et le libellé ne changent pas d'un iota, et aucun des
-écrans qui l'utilisaient déjà n'est affecté.
+## 3. La page blanche au rechargement — le service worker
 
----
+Je n'ai pas pu reproduire votre cas exact sans la tablette, mais l'analyse du
+service worker a mis au jour trois défauts réels, dont un qui produit
+littéralement une page blanche :
 
-## 3. La liste des stagiaires
+**a) Une page blanche par construction.** En cas d'échec réseau, le service
+worker répondait `caches.match(APP_SHELL)`. Si l'application n'était pas dans
+le cache, cela vaut `undefined` — et `respondWith(undefined)` provoque une
+erreur réseau, donc **un écran vide**. Il y a désormais une réponse de dernier
+recours : une page lisible « Connexion indisponible » avec un bouton
+« Réessayer ». Il n'est plus possible d'aboutir à un écran vide.
 
-Elle était une pile de cartes conçue pour le pouce : 48 stagiaires, 48 cartes à
-faire défiler, aucune comparaison possible. Elle devient :
+**b) Une installation pouvait « réussir » avec un cache vide.** Chaque mise en
+cache était enveloppée dans un `.catch(()=>{})`. L'installation se déclarait
+donc réussie même si l'application n'avait pas été enregistrée, puis
+l'activation **supprimait les anciens caches**. Fenêtre exacte du symptôme :
+nouvelle version déployée + réseau instable + rechargement = plus rien.
+Désormais l'enregistrement de l'application est **obligatoire** : s'il échoue,
+l'installation échoue et l'ancien service worker continue de servir.
 
-- **un tableau dense et triable à partir de 1000 px** — nom, jours, séances,
-  dernier score, tendance, courbe, composite, statut, résultat d'examen. Toutes
-  les colonnes chiffrées se trient d'un clic sur leur en-tête ;
-- **des cartes en dessous de 1000 px**, comme aujourd'hui.
+**c) Le cache se remplissait de copies de 1,2 Mo.** Vos réécritures Vercel
+renvoient l'application pour *toute* adresse. Chaque adresse visitée stockait
+donc sa propre copie complète. Le quota du navigateur — plus étroit sur
+tablette — était atteint en quelques visites, et les mises en cache échouaient
+ensuite en silence. Les navigations sont maintenant lues et écrites sous une
+clé unique.
 
-Quand la largeur manque, les colonnes s'effacent **par ordre inverse d'utilité**
-(courbe, puis jours, puis tendance, puis séances) plutôt que de déborder ou
-d'imposer un défilement horizontal. Ne disparaissent jamais : le nom, le dernier
-score, le composite, le statut et le résultat d'examen.
+Si la page blanche persiste après ce déploiement, dites-le-moi : il me faudra
+alors la tablette elle-même (modèle, navigateur) pour aller plus loin.
 
-**Les filtres tiennent maintenant sur une bande** au lieu de quatre cartes
-empilées. Sur votre capture, il fallait faire défiler 400 px de formulaire avant
-d'apercevoir le premier stagiaire.
+## 4. L'espace formateur (déjà dans la 4.2, rappelé ici)
+
+- La bride `.as.wd{max-width:760px}`, propre au rôle formateur, est levée.
+  **Mesuré en direct sur votre application le 20/08/2026 : 508 px de contenu
+  dans une fenêtre de 1920 px.** C'est corrigé.
+- Écran d'accueil **« Prêts à présenter ? »** avec alertes calculées sur vos
+  données réelles.
+- Liste en **tableau dense et triable** au-delà de 1000 px, cartes en dessous.
+- Filtres regroupés sur une bande au lieu de quatre cartes empilées.
 
 ---
 
 ## Ce qui a été vérifié
 
-**Mesures de rendu** — Chromium, 9 largeurs (1920, 1600, 1440, 1280, 1152, 1024,
-900, 768, 390 px), les deux rôles, sur une base simulée de 48 stagiaires,
-1 100 séries et leurs 40 questions :
+**Sur votre application réelle** (Chrome 151, Windows, 1920 px, 48 stagiaires,
+1 000 séries, 32 résultats d'examen) : aucune erreur JavaScript au chargement,
+et confirmation directe du bridage à 760 px et du verrou d'écran de garde.
 
-- largeur occupée conforme au tableau ci-dessus, à chaque largeur ;
-- **aucun débordement horizontal**, aucun défilement latéral ;
-- **aucune erreur JavaScript**, aucun identifiant HTML dupliqué ;
-- le tableau ne dépasse jamais son cadre : débordement mesuré à 0 px partout
-  (le premier essai débordait de 194 px à 1024 px — corrigé avant livraison).
+**Sur le banc, version 4.3** :
 
-**Parcours écran par écran** — 34 écrans enchaînés à 1440 px et à 390 px dans
-les deux rôles : tableau de bord, liste, les trois tris, fiche stagiaire,
-statistiques, accueil, saisie de série, historique, mes résultats, cours ETG,
-panneaux, lecture audio. **34 sur 34 rendus, aucun en défaut.**
+- 9 largeurs × 2 rôles : aucun débordement, aucune erreur, aucun identifiant
+  dupliqué ;
+- 34 écrans enchaînés à 1440 px et à 390 px : 34 sur 34 ;
+- **atteignabilité des contenus** — catégories C et B, à 1920 / 1024 / 768 /
+  390 px : **15/15 et 10/10 entrées joignables**, avec une voie d'accès valide
+  à chaque largeur ;
+- démarrage réel en HTTP avec service worker actif : écran de garde présent au
+  premier chargement **et à chaque rechargement**.
 
----
+## Ce qui vient ensuite (4.4)
 
-## Ce qui reste à faire
-
-Le **contenu** de certains écrans stagiaire est encore dessiné pour 520 px :
-sur grand écran, l'accueil du stagiaire étale ses quatre chiffres au lieu de les
-regrouper. L'espace formateur, lui, est fait.
-
-Restent aussi ouverts, signalés lors de l'audit et non traités à ce jour :
-la reprise silencieuse d'une erreur de chargement dans `loadFCState`,
-l'archivage possible sur un PDF vide, `window._S` non purgé à la déconnexion,
-et les scripts externes chargés sans empreinte d'intégrité.
+L'espace stagiaire conforme à la maquette : écran **Aujourd'hui** (consigne du
+formateur, action unique du jour, bloc « Ensuite »), **Réviser**, **Où j'en
+suis**. Il s'accompagnera d'une nouvelle table Supabase `consignes` et de
+l'interface formateur pour écrire ces consignes — avec son script SQL.

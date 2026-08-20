@@ -779,6 +779,9 @@ select{appearance:none;-webkit-appearance:none;padding-right:34px;
   /* Le libelle reste SOUS l'icone : une barre d'icones muettes oblige a
      deviner, et sur tablette il n'y a pas de survol pour reveler une bulle. */
   .ap-t{display:block;font-size:10px;font-weight:700;line-height:1.15;letter-spacing:.1px}
+  /* Entree verrouillee : visible mais attenuee, comme dans le tiroir. */
+  .ap-i.verrou{opacity:.62}
+  .ap-v{font-size:10px;line-height:1;opacity:.8}
   .ap-tl{display:none}
   .ap-tc{display:inline}
   .ap-grp{font-size:9.5px;text-transform:uppercase;letter-spacing:.6px;
@@ -803,6 +806,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:34px;
   .ap-i .ap-g{font-size:16px;width:22px;text-align:center;flex:0 0 auto}
   .ap-t{flex:1;font-size:13.5px;font-weight:600;letter-spacing:0;min-width:0;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ap-v{flex:0 0 auto;margin-left:auto}
   .ap-tl{display:inline}
   .ap-tc{display:none}
   .ap-grp{text-align:left;padding-left:12px;font-size:10px;margin:14px 0 4px}
@@ -1249,14 +1253,18 @@ select{appearance:none;-webkit-appearance:none;padding-right:34px;
   var ov=document.getElementById('splash');
   if(!ov)return;
 
-  /* Une seule apparition par session : un formateur qui enchaine les ecrans,
-     ou qui revient a l'application apres un aller-retour, ne la revoit pas. */
-  try{
-    if(sessionStorage.getItem('etg_splash')==='1'){
-      ov.parentNode.removeChild(ov);return;
-    }
-    sessionStorage.setItem('etg_splash','1');
-  }catch(e){/* mode prive : l'ecran jouera a chaque fois, sans consequence */}
+  /* L'ecran de garde joue a CHAQUE chargement de page, actualisation comprise.
+
+     Il y avait ici un verrou "une seule fois par session" (sessionStorage).
+     L'intention etait de ne pas rejouer le logo a chaque changement d'ecran,
+     mais l'application ne recharge jamais la page quand on change d'ecran :
+     le seul cas ou le verrou intervenait etait precisement l'actualisation.
+     Resultat, le logo ne se montrait plus jamais apres le premier chargement
+     d'un onglet — le defaut signale le 20/08/2026.
+
+     La cle est effacee au passage : sans cela, un onglet deja ouvert
+     garderait le verrou jusqu'a sa fermeture. */
+  try{sessionStorage.removeItem('etg_splash');}catch(e){}
 
   var v=(ov.className.match(/\bv[abc]\b/)||['va'])[0];
   var duree=DUREE[v]||1600;
@@ -8572,40 +8580,67 @@ async function dlBilanETGFor(stagId){
    ========================================================================= */
 
 /* --- Entrees de navigation, deduites du role et de la categorie -------------
-   La liste reprend celle du tiroir. Elle est construite ici plutot que
-   reutilisee telle quelle pour ne pas toucher a buildDrawer(), dont plusieurs
-   ecrans dependent. `mob` marque les entrees qui apparaissent dans la barre du
-   bas : cinq au maximum, c'est ce qu'un pouce atteint sans se contorsionner. */
+
+   CETTE LISTE EST LE MIROIR EXACT DU TIROIR.
+
+   La version 4.1 n'en reprenait que 9 sur 14, alors qu'elle masquait le bouton
+   du tiroir au-dela de 700 px (#drawerBtn{display:none}). Resultat : huit
+   contenus sont devenus purement inatteignables sur ordinateur et sur
+   tablette — Fin de formation ETG, 200 questions, Socles, Themes, Fiches
+   orales, Fin de formation Hors circulation, Astuces de conduite, Fin de
+   formation circulation. Sur telephone ils restaient joignables par l'onglet
+   "Menu" : le defaut etait invisible a qui testait au telephone.
+
+   Toute entree ajoutee a buildDrawer() doit l'etre ici aussi. Le script de
+   construction verifie desormais que les deux listes coincident, et refuse de
+   produire un fichier ou une cle du tiroir n'aurait pas d'equivalent ici.
+
+   Le routage passe par drawerGo(), qui porte deja le verrouillage par
+   categorie et les ecrans "bientot disponible" : aucune logique n'est
+   redupliquee. `mob` marque les entrees de la barre du bas : quatre au
+   maximum, c'est ce qu'un pouce atteint sans se contorsionner. */
 function apNavItems(){
   if(CP&&CP.role==='formateur'){
     return [
+      {id:'f_b', g:'&#127919;', t:'Tableau de bord',     c:'Bord',       mob:1, go:"rFBoard()"},
       {id:'f_b', g:'&#127919;', t:'Tableau de bord',     c:'Bord',       mob:1, go:"rFBoard()"},
       {id:'f_s', g:'&#128101;', t:'Tous les stagiaires', c:'Stagiaires', mob:1, go:"fTab('s',null)"},
       {id:'f_k', g:'&#128200;', t:'Statistiques',        c:'Stats',      mob:1, go:"fTab('k',null)"}
     ];
   }
+  var dispo=function(k){return (typeof contenuDisponible==='function')?contenuDisponible(k):true;};
   var it=[
-    {id:'a',    g:'&#127968;', t:'Accueil',              c:'Accueil',  mob:1, go:"stag('a',null)"},
-    {id:'g',    g:'&#128203;', t:'Saisir une série',     c:'Série',    mob:1, go:"stag('g',null)"},
-    {id:'h',    g:'&#128336;', t:'Historique',           c:'Historique',      go:"stag('h',null)"},
-    {id:'res',  g:'&#128202;', t:"Mes résultats d'examen", c:'Résultats', mob:1, go:"rMesResultats()"},
-    {sep:'Apprendre'},
-    {id:'cours',g:'&#128214;', t:'Cours ETG',            c:'Cours',    mob:1, go:"rCours()"},
-    {id:'pan',  g:'&#128682;', t:'Panneaux',             c:'Panneaux',        go:"rPanneaux()"}
+    {id:'a',        g:'&#127968;', t:'Accueil',                c:'Accueil',   mob:1, go:"drawerGo('a')"},
+    {id:'resultats',g:'&#128202;', t:"Mes résultats d'examen", c:'Résultats', mob:1, go:"drawerGo('resultats')"},
+    {sep:'ETG'},
+    {id:'g',        g:'&#128203;', t:'Saisir une série',       c:'Série',     mob:1, go:"drawerGo('g')"},
+    {id:'cours',    g:'&#128214;', t:'Cours ETG',              c:'Cours',     mob:1, go:"drawerGo('cours')"},
+    {id:'panneaux', g:'&#128682;', t:'Panneaux',               c:'Panneaux',         go:"drawerGo('panneaux')"},
+    {id:'h',        g:'&#128336;', t:'Historique',             c:'Historique',       go:"drawerGo('h')"},
+    {id:'etgfin',   g:'&#127891;', t:'Fin de formation ETG',   c:'Fin ETG',          go:"drawerGo('etgfin')"}
   ];
-  /* Les modules hors circulation ne concernent que les categories qui passent
-     cette epreuve : les proposer aux autres n'aurait aucun sens. */
+  /* La section hors circulation n'existe que pour les categories qui passent
+     cette epreuve : la montrer aux autres laisserait croire a une epreuve qui
+     n'existe pas. Meme condition que dans buildDrawer(). */
   var mod=(typeof moduleForCat==='function')?moduleForCat(CP&&CP.categorie):null;
   if(mod){
     it.push({sep:'Hors circulation'});
     if(mod==='C') it.push({id:'fc', g:'&#128736;',t:'Fiches (200 questions)',c:'Fiches',go:"stag('fc',null)"});
     if(mod==='D') it.push({id:'fd', g:'&#128736;',t:'Fiches D',              c:'Fiches',go:"stag('fd',null)"});
     if(mod==='CE')it.push({id:'fce',g:'&#128736;',t:'Fiches CE',             c:'Fiches',go:"stag('fce',null)"});
+    it.push({id:'q200',  g:'&#128994;',t:'200 questions',c:'200 quest.',verrou:!dispo('q200'),  go:"drawerGo('q200')"});
+    it.push({id:'socles',g:'&#129521;',t:'Socles',       c:'Socles',    verrou:!dispo('socles'),go:"drawerGo('socles')"});
+    it.push({id:'themes',g:'&#128218;',t:'Thèmes',       c:'Thèmes',    verrou:!dispo('themes'),go:"drawerGo('themes')"});
+    it.push({id:'orales',g:'&#128483;',t:'Fiches orales',c:'Orales',    verrou:!dispo('orales'),go:"drawerGo('orales')"});
+    it.push({id:'hcfin', g:'&#127891;',t:'Fin de formation Hors circulation',c:'Fin HC',go:"drawerGo('hcfin')"});
   }
+  it.push({sep:'Circulation'});
   if(typeof aEpreuve==='function'&&aEpreuve(CP&&CP.categorie,'circulation'))
     it.push({id:'circ',g:'&#128663;',t:'Circulation',c:'Circulation',go:"stag('circ',null)"});
+  it.push({id:'astuces',g:'&#128736;',t:'Astuces de conduite',c:'Astuces',verrou:!dispo('astuces'),go:"drawerGo('astuces')"});
+  it.push({id:'circfin',g:'&#127937;',t:'Fin de formation circulation',c:'Fin circ.',go:"drawerGo('circfin')"});
   it.push({sep:'Réglages'});
-  it.push({id:'audio',g:'&#128266;',t:'Lecture audio',c:'Audio',go:"rLectureAudio()"});
+  it.push({id:'audio',g:'&#128266;',t:'Lecture audio',c:'Audio',go:"drawerGo('audio')"});
   return it;
 }
 
@@ -8621,13 +8656,19 @@ function buildApNav(actif){
   nav.innerHTML=items.map(function(x){
     if(x.sep)return '<div class="ap-grp">'+x.sep+'</div>';
     var on=(AP_ACTIF===x.id)?' on':'';
+    /* Le verrou reprend celui du tiroir : l'entree reste cliquable et mene a
+       l'ecran "bientot disponible", elle n'est pas escamotee. Un contenu
+       absent du menu est un contenu que le stagiaire croit inexistant. */
+    var v=x.verrou?' verrou':'';
+    var lbl=x.t+(x.verrou?' — bientôt disponible':'');
     /* title porte le libelle complet pour la souris ; aria-label pour les
        lecteurs d'ecran ; le libelle court reste visible dans le rail. */
-    return '<button type="button" class="ap-i'+on+'" title="'+esc(x.t)+'" aria-label="'+esc(x.t)+'"'
+    return '<button type="button" class="ap-i'+on+v+'" title="'+esc(lbl)+'" aria-label="'+esc(lbl)+'"'
       +(on?' aria-current="page"':'')+' onclick="apGo(\''+x.id+'\',function(){'+x.go+'})">'
       +'<span class="ap-g" aria-hidden="true">'+x.g+'</span>'
       +'<span class="ap-t"><span class="ap-tl">'+esc(x.t)+'</span>'
-      +'<span class="ap-tc">'+esc(x.c||x.t)+'</span></span></button>';
+      +'<span class="ap-tc">'+esc(x.c||x.t)+'</span></span>'
+      +(x.verrou?'<span class="ap-v" aria-hidden="true">&#128274;</span>':'')+'</button>';
   }).join('');
 
   var mob=items.filter(function(x){return x.mob;}).slice(0,4);
